@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Student Manager</string>
+    <string name="name_hint">Họ tên</string>
+    <string name="student_id_hint">MSSV</string>
+    <string name="email_hint">Email</string>
+    <string name="phone_hint">Phone</string>
+    <string name="save">Lưu</string>
+    <string name="delete_student">Xóa sinh viên</string>
+    <string name="confirm_delete">Bạn có chắc muốn xóa %s?</string>
+    <string name="add_student">Thêm sinh viên</string>
+    <string name="update_student">Cập nhật sinh viên</string>
+    <string name="enter_required_fields">Vui lòng nhập đầy đủ họ tên và MSSV</string>
+    <string name="yes">Có</string>
+    <string name="no">Không</string>
+    <string name="more_options">Thêm tùy chọn</string>
+    <string name="enter_all_fields">Vui lòng điền đầy đủ tất cả các trường</string>
+</resources>
