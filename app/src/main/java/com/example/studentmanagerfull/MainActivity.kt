@@ -48,7 +48,7 @@ class MainActivity : AppCompatActivity(), StudentAdapter.OnItemActionListener {
         }
     }
 
-    private fun startAddEdit(student: Student?, isEdit: Boolean) {
+    private fun startAddEdit(student: StudentEntity?, isEdit: Boolean) {
         val intent = Intent(this, StudentActivity::class.java).apply {
             student?.let { putExtra("student", it) }
             putExtra("isEdit", isEdit)
@@ -61,7 +61,7 @@ class MainActivity : AppCompatActivity(), StudentAdapter.OnItemActionListener {
     ) { result ->
         if (result.resultCode == RESULT_OK) {
             val data = result.data ?: return@registerForActivityResult
-            val student = data.getSerializableExtra("student") as Student
+            val student = data.getSerializableExtra("student") as StudentEntity
             val isEdit = data.getBooleanExtra("isEdit", false)
             if (isEdit) {
                 viewModel.updateStudent(student)
@@ -73,7 +73,7 @@ class MainActivity : AppCompatActivity(), StudentAdapter.OnItemActionListener {
         }
     }
 
-    override fun onAction(viewType: StudentAdapter.ActionType, student: Student) {
+    override fun onAction(viewType: StudentAdapter.ActionType, student: StudentEntity) {
         when (viewType) {
             StudentAdapter.ActionType.UPDATE -> startAddEdit(student, true)
             StudentAdapter.ActionType.DELETE -> AlertDialog.Builder(this)

@@ -3,7 +3,7 @@
     <data>
         <variable
             name="student"
-            type="com.example.studentmanagerfull.Student" />
+            type="com.example.studentmanagerfull.StudentEntity" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

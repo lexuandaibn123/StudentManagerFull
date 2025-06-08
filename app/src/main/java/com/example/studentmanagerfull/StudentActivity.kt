@@ -12,7 +12,7 @@ import com.example.studentmanagerfull.databinding.ActivityStudentBinding
 class StudentActivity : AppCompatActivity() {
     private lateinit var binding: ActivityStudentBinding
     private var isEdit = false
-    private lateinit var student: Student
+    private lateinit var student: StudentEntity
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,7 +21,7 @@ class StudentActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = if (isEdit) getString(R.string.update_student) else getString(R.string.add_student)
 
-        student = intent.getSerializableExtra("student") as? Student ?: Student()
+        student = intent.getSerializableExtra("student") as? StudentEntity ?: StudentEntity()
         isEdit = intent.getBooleanExtra("isEdit", false)
         binding.student = student
 

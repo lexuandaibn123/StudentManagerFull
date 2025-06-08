@@ -4,38 +4,59 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
+import androidx.room.Room
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class StudentViewModel(application: Application) : AndroidViewModel(application) {
-    private val dbHelper: StudentDbHelper = StudentDbHelper(application)
-    private val _students = MutableLiveData<MutableList<Student>>()
-    val students: LiveData<MutableList<Student>> = _students
+    private val db: AppDatabase = Room.databaseBuilder(
+        application,
+        AppDatabase::class.java, "students.db"
+    ).build()
+    private val dao: StudentDao = db.studentDao()
+    private val _students = MutableLiveData<MutableList<StudentEntity>>()
+    val students: LiveData<MutableList<StudentEntity>> = _students
 
     init {
-        _students.value = dbHelper.getAllStudents().toMutableList()
+        loadStudents()
     }
 
-    fun addStudent(student: Student) {
-        val id = dbHelper.insertStudent(student)
-        student.id = id
-        val list = _students.value ?: mutableListOf()
-        list.add(student)
-        _students.value = list
-    }
-
-    fun updateStudent(updated: Student) {
-        dbHelper.updateStudent(updated)
-        val list = _students.value ?: return
-        val index = list.indexOfFirst { it.id == updated.id }
-        if (index != -1) {
-            list[index] = updated
-            _students.value = list
+    private fun loadStudents() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val studentsList = dao.getAllStudents().toMutableList()
+            _students.postValue(studentsList)
         }
     }
 
-    fun deleteStudent(student: Student) {
-        dbHelper.deleteStudent(student.id)
-        val list = _students.value ?: return
-        list.removeAll { it.id == student.id }
-        _students.value = list
+    fun addStudent(student: StudentEntity) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val id = dao.insertStudent(student)
+            val updatedStudent = student.copy(id = id.toInt())
+            val list = _students.value ?: mutableListOf()
+            list.add(updatedStudent)
+            _students.postValue(list)
+        }
+    }
+
+    fun updateStudent(updated: StudentEntity) {
+        viewModelScope.launch(Dispatchers.IO) {
+            dao.updateStudent(updated)
+            val list = _students.value ?: return@launch
+            val index = list.indexOfFirst { it.id == updated.id }
+            if (index != -1) {
+                list[index] = updated
+                _students.postValue(list)
+            }
+        }
+    }
+
+    fun deleteStudent(student: StudentEntity) {
+        viewModelScope.launch(Dispatchers.IO) {
+            dao.deleteStudent(student)
+            val list = _students.value ?: return@launch
+            list.removeAll { it.id == student.id }
+            _students.postValue(list)
+        }
     }
 }
